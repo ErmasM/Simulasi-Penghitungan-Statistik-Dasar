@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Hasil Statistik</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 30px;
+            max-width: 900px;
+            margin: auto;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .result-box {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        canvas {
+            margin-top: 30px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+        }
+        details {
+            margin-top: 10px;
+            background: #eef;
+            padding: 10px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hasil Perhitungan Statistik Dasar</h1>
+
+    <div class="result-box">
+        <p><strong>Data Acak:</strong> {{ data }}</p>
+        <p><strong>Mean (Rata-rata):</strong> {{ mean }}</p>
+        <p><strong>Median:</strong> {{ median }}</p>
+        <p><strong>Modus:</strong> {{ modus }}</p>
+        <p><strong>Minimum:</strong> {{ minimum }}</p>
+        <p><strong>Maksimum:</strong> {{ maksimum }}</p>
+    </div>
+
+    <canvas id="barChart" width="700" height="300"></canvas>
+
+    <script>
+        const data = {{ data | safe }};
+        const canvas = document.getElementById('barChart');
+        const ctx = canvas.getContext('2d');
+    
+        const barWidth = 30;
+        const gap = 10;
+        const maxVal = Math.max(...data);
+        const scale = 200 / maxVal;
+        const offsetY = 30;
+    
+        // Garis bantu horizontal (grid) + skala angka
+        ctx.strokeStyle = "#ccc";
+        ctx.fillStyle = "#555";
+        ctx.font = "12px sans-serif";
+        for (let i = 0; i <= 5; i++) {
+            const y = canvas.height - offsetY - (i * 40);
+            ctx.beginPath();
+            ctx.moveTo(30, y);
+            ctx.lineTo(canvas.width - 10, y);
+            ctx.stroke();
+            ctx.fillText(Math.round((maxVal / 5) * i), 5, y + 5);
+        }
+    
+        // Gambar batang + label
+        data.forEach((value, i) => {
+            const x = i * (barWidth + gap) + 40;
+            const height = value * scale;
+            const y = canvas.height - height - offsetY;
+    
+            ctx.fillStyle = `hsl(${i * 25}, 70%, 60%)`; // warna dinamis
+            ctx.fillRect(x, y, barWidth, height);
+    
+            ctx.fillStyle = "#000";
+            ctx.fillText(value, x + 5, y - 5);             // nilai di atas batang
+            ctx.fillText(i + 1, x + 10, canvas.height - 5); // label batang
+        });
+    
+        // Garis dasar
+        ctx.beginPath();
+        ctx.moveTo(30, canvas.height - offsetY);
+        ctx.lineTo(canvas.width - 10, canvas.height - offsetY);
+        ctx.stroke();
+    </script>
+    
+
+    <hr>
+    <h2>Penjelasan Konsep Statistik</h2>
+
+    <details>
+        <summary>1. Mean (Rata-rata)</summary>
+        <p>Mean adalah jumlah seluruh data dibagi dengan banyaknya data.</p>
+        <code>Mean = (x₁ + x₂ + ... + xn) / n</code>
+    </details>
+
+    <details>
+        <summary>2. Median</summary>
+        <p>Median adalah nilai tengah dari data yang sudah diurutkan. Jika jumlah data genap, median adalah rata-rata dua nilai tengah.</p>
+    </details>
+
+    <details>
+        <summary>3. Modus</summary>
+        <p>Modus adalah nilai yang paling sering muncul dalam data. Bisa lebih dari satu jika ada beberapa nilai yang frekuensinya sama dan tertinggi.</p>
+    </details>
+
+    <details>
+        <summary>4. Minimum & Maksimum</summary>
+        <p>Minimum adalah nilai terkecil dalam data. Maksimum adalah nilai terbesar.</p>
+    </details>
+</body>
+</html>

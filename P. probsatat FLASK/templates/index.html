@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulasi Statistik Dasar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            text-align: center;
+            padding-top: 100px;
+            font-family: sans-serif;
+        }
+        form {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #f0f0f0;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        input[type="number"] {
+            padding: 10px;
+            width: 200px;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulasi Penghitungan Statistik Dasar</h1>
+    <p>Masukkan jumlah nilai kuis :</p>
+    <form method="POST" action="/hasil">
+        <input type="number" name="jumlah" min="1" max="100" required placeholder="banyak nilai kuis">
+        <br>
+        <input type="submit" value="Hitung ">
+    </form>
+</body>
+</html>
